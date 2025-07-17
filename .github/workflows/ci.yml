@@ -1,0 +1,81 @@
+name: MPOC CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  cypress-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Enable Corepack and setup Yarn
+        run: |
+          corepack enable
+          corepack prepare yarn@4.9.1 --activate
+          yarn --version
+
+      - name: Cache Yarn dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            .yarn/cache
+            .yarn/install-state.gz
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: ${{ runner.os }}-yarn-
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      # ---- Next App ----
+      - name: Build Next App
+        run: yarn workspace next-app build
+
+      - name: Cypress E2E - Next App
+        uses: cypress-io/github-action@v6
+        with:
+          working-directory: apps/next-app
+          start: yarn start
+          wait-on: http://localhost:3000
+          wait-on-timeout: 60
+          install: false
+
+      # ---- Vite App ----
+      - name: Build Vite App
+        run: yarn workspace vite-app build
+
+      - name: Cypress E2E - Vite App
+        uses: cypress-io/github-action@v6
+        with:
+          working-directory: apps/vite-app
+          start: yarn preview
+          wait-on: http://localhost:4173
+          wait-on-timeout: 60
+          install: false
+
+      - name: Upload Cypress Videos
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-videos
+          path: |
+            apps/next-app/cypress/videos/
+            apps/vite-app/cypress/videos/
+          if-no-files-found: ignore
+
+      - name: Upload Cypress Screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-screenshots
+          path: |
+            apps/next-app/cypress/screenshots/
+            apps/vite-app/cypress/screenshots/
+          if-no-files-found: ignore
+

@@ -1,10 +1,12 @@
 {
-  "name": "mpoc-v2",
+  "name": "@mpoc/root",
+  "private": true,
+  "version": "0.0.0",
   "workspaces": [
     "apps/*",
     "packages/*"
   ],
-  "packageManager": "yarn@4.9.1",
+  "packageManager": "yarn@4.9.2",
   "scripts": {
     "dev:next": "yarn workspace next-app dev",
     "dev:vite": "yarn workspace vite-app dev",

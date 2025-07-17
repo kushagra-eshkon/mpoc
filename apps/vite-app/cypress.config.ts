@@ -11,7 +11,7 @@ export default defineConfig({
   },
   e2e: {
     specPattern: "cypress/e2e/**/*.cy.{ts,tsx}",
-    baseUrl: "http://localhost:5173",
+    baseUrl: "http://localhost:4173",
     supportFile: false,
   },
 })
