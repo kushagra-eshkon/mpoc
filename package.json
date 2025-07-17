@@ -1,4 +1,34 @@
 {
   "name": "mpoc-v2",
-  "packageManager": "yarn@4.9.1"
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "packageManager": "yarn@4.9.1",
+  "scripts": {
+    "dev:next": "yarn workspace next-app dev",
+    "dev:vite": "yarn workspace vite-app dev",
+    "dev": "concurrently \"yarn dev:next\" \"yarn dev:vite\"",
+    "build:next": "yarn workspace next-app build",
+    "build:vite": "yarn workspace vite-app build",
+    "build": "concurrently \"yarn build:next\" \"yarn build:vite\"",
+    "start:next": "yarn workspace next-app start",
+    "start:vite": "yarn workspace vite-app preview",
+    "start": "concurrently \"yarn start:next\" \"yarn start:vite\"",
+    "test:ct:next": "yarn workspace next-app cypress open --component",
+    "test:ct:vite": "yarn workspace vite-app cypress open --component",
+    "test:e2e:next": "yarn workspace next-app cypress open --e2e",
+    "test:e2e:vite": "yarn workspace vite-app cypress open --e2e",
+    "test:ct": "concurrently \"yarn test:ct:next\" \"yarn test:ct:vite\"",
+    "test:e2e": "concurrently \"yarn test:e2e:next\" \"yarn test:e2e:vite\"",
+    "test:next:ct:ci": "yarn workspace next-app cypress run --component",
+    "test:vite:ct:ci": "yarn workspace vite-app cypress run --component",
+    "test:next:e2e:ci": "yarn workspace next-app cypress run --e2e",
+    "test:vite:e2e:ci": "yarn workspace vite-app cypress run --e2e",
+    "test:next:ci": "concurrently \"yarn test:next:ct:ci\" \"yarn test:next:e2e:ci\"",
+    "test:vite:ci": "concurrently \"yarn test:vite:ct:ci\" \"yarn test:vite:e2e:ci\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.0"
+  }
 }

@@ -1,0 +1,9 @@
+{
+  "name": "@mpoc/ui",
+  "packageManager": "yarn@4.9.1",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "dependencies": {
+    "@mpoc/store": "workspace:^"
+  }
+}
